@@ -1,16 +1,29 @@
 import { ethers } from "ethers";
 import { erc20ABI } from "@metamask/sdk-react-ui";
-import listTokensEth from "../listTokensEth.json";
+import etherList from "../listTokens/ether.json";
+import polygonList from "../listTokens/polygon.json";
+import arbitumList from "../listTokens/arbitum.json"
 
-const arrSymbolTokens = ["ETH", "USDT", "USDC", "CRV"];
+const arrSymbolTokens = ["USDT", "USDC", "CRV"];
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
+const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+
+let chainId;
+
+provider.on("network", (newNetwork, oldNetwork) => {
+  if (oldNetwork) {
+    window.location.reload();
+  }
+  chainId = newNetwork.chainId;
+});
+
 provider.send("eth_requestAccounts", []);
 
-const findEthBalance = async () => {
+const findCurrentNetBalance = async () => {
   try {
     const signer = provider.getSigner();
     const balance = await signer.getBalance();
+   
     return ethers.utils.formatEther(balance, 18);
   } catch (error) {
     console.log("error from findEthBalance", error);
@@ -27,17 +40,40 @@ const createContractAndReturnBalance = async (address, account) => {
   }
 };
 
+const findCurrentListTokens = () => {
+switch (chainId) {
+    case etherList[0].chainId:
+      return etherList;
+    case polygonList[0].chainId:
+      return polygonList;
+    case arbitumList[0].chainId:
+      return arbitumList;
+    default:
+      throw new Error(`Список токенов для chainId ${chainId} не найден.`);
+  }
+};
+
 export const addBalanceToArrTokens = async (account) => {
   const arrTokensBalance = [];
-  for await (const name of arrSymbolTokens) {
-    const tokenObj = listTokensEth.find(({ symbol }) => symbol === name);
+  const currentListTokens = findCurrentListTokens();
+  const currentToken = currentListTokens.find(
+    (token) => token.address === "0x0000000000000000000000000000000000000000"
+  );
 
-    tokenObj.balance =
-      tokenObj.symbol !== "ETH"
-        ? await createContractAndReturnBalance(tokenObj.address, account)
-        : await findEthBalance();
+  for await (const name of [currentToken.symbol, ...arrSymbolTokens]) {
+    let tokenObj;
 
-    arrTokensBalance.push(tokenObj);
+    tokenObj = currentListTokens.find(({ symbol }) => symbol === name);
+
+    if (tokenObj) {
+      tokenObj.balance =
+        tokenObj?.symbol !== currentToken.symbol
+          ? await createContractAndReturnBalance(tokenObj.address, account)
+          : await findCurrentNetBalance();
+
+      arrTokensBalance.push(tokenObj);
+    }
   }
+
   return arrTokensBalance;
 };
