@@ -30,7 +30,7 @@ const findCurrentNetBalance = async () => {
   }
 };
 
-const createContractAndReturnBalance = async (address, account) => {
+export const createContractAndReturnBalance = async (address, account) => {
   try {
     const contract = new ethers.Contract(address, erc20ABI, provider);
     const balance = await contract.balanceOf(account);
@@ -40,7 +40,7 @@ const createContractAndReturnBalance = async (address, account) => {
   }
 };
 
-const findCurrentListTokens = () => {
+export const findCurrentListTokens = () => {
   switch (chainId) {
     case etherList[0].chainId:
       return etherList;
