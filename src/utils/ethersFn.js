@@ -5,6 +5,30 @@ import polygonList from "../listTokens/polygon.json";
 import arbitumList from "../listTokens/arbitum.json";
 
 const arrSymbolTokens = ["ETH", "USDT", "USDC", "CRV"];
+export const networksList = [
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    chainId: 1,
+    logoURI:
+      "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+  },
+  {
+    symbol: "MATIC",
+    name: "Polygon",
+    chainId: 137,
+    logoURI:
+      "https://tokens.1inch.io/0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0.png",
+  },
+
+  {
+    symbol: "ARB",
+    name: "Arbitrum",
+    chainId: 42161,
+    logoURI:
+      "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+  },
+];
 
 const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 
@@ -24,7 +48,7 @@ const findCurrentNetBalance = async () => {
     const signer = provider.getSigner();
     const balance = await signer.getBalance();
 
-    return ethers.utils.formatEther(balance, 18);
+    return Number(ethers.utils.formatEther(balance, 18)).toFixed(2);
   } catch (error) {
     console.log("error from findEthBalance", error);
   }
@@ -34,7 +58,7 @@ export const createContractAndReturnBalance = async (address, account) => {
   try {
     const contract = new ethers.Contract(address, erc20ABI, provider);
     const balance = await contract.balanceOf(account);
-    return ethers.utils.formatEther(balance, 18);
+    return Number(ethers.utils.formatEther(balance, 18)).toFixed(2);
   } catch (error) {
     console.log("error from createContracrAndReturnBalance", error);
   }
@@ -52,6 +76,8 @@ export const findCurrentListTokens = () => {
       throw new Error(`Список токенов для chainId ${chainId} не найден.`);
   }
 };
+
+export const convertToHexadecimal = (number) => "0x" + number.toString(16);
 
 export const addBalanceToArrTokens = async (account) => {
   const arrTokensBalance = [];

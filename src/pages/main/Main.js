@@ -1,20 +1,15 @@
-import { MetaMaskButton, useSDK } from "@metamask/sdk-react-ui";
+import { useState } from "react";
 import { Container } from "../../components/container/Container";
 import { TokenList } from "../../components/tokensList/TokensList";
+import { Metamask } from "../../components/metamask/Metamask";
 
 export const Main = () => {
-  const { account } = useSDK();
-
+  const [account, setAccount] = useState("");
+ 
   return (
     <Container>
-      <MetaMaskButton
-        theme={"light"}
-        color="white"
-        text="Connect to Metamask"
-        buttonStyle={{ marginBottom: 40 }}
-      />
-      <button className="test"></button>
-      <TokenList account={account} />
+      <Metamask account={account} setAccount={setAccount} />
+      {account && <TokenList account={account} />}
     </Container>
   );
 };
