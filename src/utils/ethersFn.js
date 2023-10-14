@@ -2,9 +2,9 @@ import { ethers } from "ethers";
 import { erc20ABI } from "@metamask/sdk-react-ui";
 import etherList from "../listTokens/ether.json";
 import polygonList from "../listTokens/polygon.json";
-import arbitumList from "../listTokens/arbitum.json"
+import arbitumList from "../listTokens/arbitum.json";
 
-const arrSymbolTokens = ["USDT", "USDC", "CRV"];
+const arrSymbolTokens = ["ETH", "USDT", "USDC", "CRV"];
 
 const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 
@@ -23,7 +23,7 @@ const findCurrentNetBalance = async () => {
   try {
     const signer = provider.getSigner();
     const balance = await signer.getBalance();
-   
+
     return ethers.utils.formatEther(balance, 18);
   } catch (error) {
     console.log("error from findEthBalance", error);
@@ -41,7 +41,7 @@ const createContractAndReturnBalance = async (address, account) => {
 };
 
 const findCurrentListTokens = () => {
-switch (chainId) {
+  switch (chainId) {
     case etherList[0].chainId:
       return etherList;
     case polygonList[0].chainId:
@@ -59,20 +59,26 @@ export const addBalanceToArrTokens = async (account) => {
   const currentToken = currentListTokens.find(
     (token) => token.address === "0x0000000000000000000000000000000000000000"
   );
+  try {
+    for await (const name of new Set([
+      currentToken.symbol,
+      ...arrSymbolTokens,
+    ])) {
+      let tokenObj;
 
-  for await (const name of [currentToken.symbol, ...arrSymbolTokens]) {
-    let tokenObj;
+      tokenObj = currentListTokens.find(({ symbol }) => symbol === name);
 
-    tokenObj = currentListTokens.find(({ symbol }) => symbol === name);
+      if (tokenObj) {
+        tokenObj.balance =
+          tokenObj?.symbol !== currentToken.symbol
+            ? await createContractAndReturnBalance(tokenObj.address, account)
+            : await findCurrentNetBalance();
 
-    if (tokenObj) {
-      tokenObj.balance =
-        tokenObj?.symbol !== currentToken.symbol
-          ? await createContractAndReturnBalance(tokenObj.address, account)
-          : await findCurrentNetBalance();
-
-      arrTokensBalance.push(tokenObj);
+        arrTokensBalance.push(tokenObj);
+      }
     }
+  } catch (error) {
+    console.log("error from addBalanceToArrTokens", error);
   }
 
   return arrTokensBalance;

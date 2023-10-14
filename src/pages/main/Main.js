@@ -1,4 +1,3 @@
-// import style from "./Main.module.css";
 import { MetaMaskButton, useSDK } from "@metamask/sdk-react-ui";
 import { Container } from "../../components/container/Container";
 import { TokenList } from "../../components/tokensList/TokensList";
@@ -14,6 +13,7 @@ export const Main = () => {
         text="Connect to Metamask"
         buttonStyle={{ marginBottom: 40 }}
       />
+      <button className="test"></button>
       <TokenList account={account} />
     </Container>
   );
