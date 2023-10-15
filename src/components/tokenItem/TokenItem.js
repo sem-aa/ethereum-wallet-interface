@@ -2,14 +2,22 @@ import style from "./TokenItem.module.css";
 
 export const TokenItem = ({ tokenObj, addToken }) => {
   return (
-    <div className={style.container}>
-      <img width={32} height={32} src={tokenObj.logoURI} alt={tokenObj.name} />
-      <p>{tokenObj.name}</p>
+    <li className={style.container}>
+      <img
+        className={style.logo}
+        width={32}
+        height={32}
+        src={tokenObj.logoURI}
+        alt={tokenObj.name}
+      />
+      <p className={style.text}>{tokenObj.name}</p>
       {tokenObj.balance ? (
-        <p>balance - {tokenObj.balance}</p>
+        <p className={style.text}>balance - {tokenObj.balance}</p>
       ) : (
-        <button onClick={() => addToken(tokenObj)}>add to my list</button>
+        <button className={style.btnAdd} onClick={() => addToken(tokenObj)}>
+          add to my list
+        </button>
       )}
-    </div>
+    </li>
   );
 };

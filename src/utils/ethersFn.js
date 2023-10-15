@@ -38,6 +38,7 @@ provider.on("network", (newNetwork, oldNetwork) => {
   if (oldNetwork) {
     window.location.reload();
   }
+
   chainId = newNetwork.chainId;
 });
 

@@ -5,6 +5,7 @@ import {
 } from "../../utils/ethersFn";
 import { TokenItem } from "../tokenItem/TokenItem";
 import { createContractAndReturnBalance } from "../../utils/ethersFn";
+import style from "./TokenList.module.css";
 
 export const TokenList = ({ account }) => {
   const [listTokens, setListTokens] = useState([]);
@@ -56,33 +57,41 @@ export const TokenList = ({ account }) => {
 
   return (
     <>
-      <div>
+      <label className={style.labelSearch}>
         <input
+          className={style.inputSearch}
           type="text"
           placeholder="Search by symbol or name"
           value={searchText}
           onChange={(e) => handleSearch(e.target.value)}
         />
-      </div>
+      </label>
       {filteredTokens.length ? (
         filteredTokens.map((tokenObj) => (
           <TokenItem key={tokenObj.symbol} tokenObj={tokenObj} />
         ))
       ) : (
         <>
-          <p>Token not found, continue searching in the database?</p>
-          <button onClick={() => searchTokenBd(searchText)}>
+          <p className={style.text}>
+            Token not found, continue searching in the database?
+          </p>
+          <button
+            className={style.btnSearch}
+            onClick={() => searchTokenBd(searchText)}
+          >
             Search in All Tokens
           </button>
-          {filteredAllTokens.length
-            ? filteredAllTokens.map((tokenObj) => (
-                <TokenItem
-                  key={tokenObj.symbol}
-                  tokenObj={tokenObj}
-                  addToken={findBalanceToken}
-                />
-              ))
-            : null}
+          <ul>
+            {filteredAllTokens.length
+              ? filteredAllTokens.map((tokenObj) => (
+                  <TokenItem
+                    key={tokenObj.symbol}
+                    tokenObj={tokenObj}
+                    addToken={findBalanceToken}
+                  />
+                ))
+              : null}
+          </ul>
         </>
       )}
     </>

@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
 import { useSDK } from "@metamask/sdk-react";
 import { convertToHexadecimal, networksList } from "../../utils/ethersFn";
+import style from "./Metamask.module.css";
 
 export const Metamask = ({ account, setAccount }) => {
-    const [networks, setNetworks] = useState([])
+  const [networks, setNetworks] = useState([]);
   const { sdk, provider, chainId } = useSDK();
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-      connect();
-      setNetworks(networksList.filter((net) => convertToHexadecimal(net.chainId) !== chainId))
+    connectMetamask();
+    setNetworks(
+      networksList.filter(
+        (net) => convertToHexadecimal(net.chainId) !== chainId
+      )
+    );
   }, [chainId]);
 
-  const connect = async () => {
+  const connectMetamask = async () => {
     try {
       const accounts = await sdk?.connect();
       setAccount(accounts?.[0]);
     } catch (err) {
-      console.warn(`failed to connect..`, err);
+      console.log(`failed to connect..`, err);
     }
   };
 
@@ -31,18 +37,46 @@ export const Metamask = ({ account, setAccount }) => {
     }
   };
 
+  const toggleActive = () => {
+    setIsActive(!isActive);
+  };
+
   return (
-    <>
-      <button type="button" onClick={connect}>{account ? account : 'connect Metamask'}</button>
-    
-      <div>
-        {networks?.map((net) => (
-          <div key={net.chainId} onClick={() => changeNetwork(net.chainId)}>
-            <img height={32} width={32} src={net.logoURI} alt={net.name} />
-            <p>{net.name}</p>
-          </div>
-        ))}
-      </div>
-    </>
+    <div className={style.container}>
+      <button
+        className={style.metamaskBtn}
+        type="button"
+        onClick={connectMetamask}
+      >
+        {account ? account : "connect Metamask"}
+      </button>
+      {account && (
+        <div className={style.networkContainer}>
+          <p className={style.label} onClick={toggleActive}>
+            Change Network
+          </p>
+          {networks?.map((net) => (
+            <div
+              className={
+                isActive ? `${style.networkList}.active` : style.networkList
+              }
+              key={net.chainId}
+              onClick={() => changeNetwork(net.chainId)}
+            >
+              <div className={style.network}>
+                <img
+                  className={style.networkIcon}
+                  height={24}
+                  width={24}
+                  src={net.logoURI}
+                  alt={net.name}
+                />
+                <p className={style.text}>{net.name}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };

@@ -1,0 +1,65 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.metamaskBtn {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.metamaskBtn:hover {
+  background-color: #2589c3;
+}
+
+.networkContainer {
+  position: relative;
+  display: inline-block;
+  background-color: white;
+  border-radius: 5px;
+  padding: 4px;
+  max-width: 200px;
+}
+
+.label {
+  cursor: pointer;
+}
+
+.networkList {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  display: none;
+}
+
+.networkList.active {
+  top: 100%;
+}
+
+.network {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+}
+
+.network:hover {
+  background-color: #f0f0f0;
+}
+
+.networkIcon {
+  margin-right: 5px;
+}
