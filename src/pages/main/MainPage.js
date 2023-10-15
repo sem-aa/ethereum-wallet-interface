@@ -5,9 +5,7 @@ import { Metamask } from "components/metamask/Metamask";
 
 export const MainPage = () => {
   const [account, setAccount] = useState("");
-
   
-
   return (
     <Container>
       <Metamask account={account} setAccount={setAccount} />

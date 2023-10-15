@@ -65,7 +65,6 @@ export const Metamask = ({ account, setAccount }) => {
             >
               {networks?.map((net) => (
                 <option
-                  // disabled={convertToHexadecimal(net.chainId) === chainId}
                   className={style.text}
                   key={net.chainId}
                   value={net.chainId}
