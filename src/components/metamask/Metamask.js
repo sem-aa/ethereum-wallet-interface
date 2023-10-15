@@ -1,30 +1,36 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSDK } from "@metamask/sdk-react";
-import { convertToHexadecimal, networksList } from "../../utils/ethersFn";
+import { convertToHexadecimal, networksList } from "utils/ethersFn";
 import style from "./Metamask.module.css";
 
 export const Metamask = ({ account, setAccount }) => {
   const [networks, setNetworks] = useState([]);
   const { sdk, provider, chainId } = useSDK();
-  const [isActive, setIsActive] = useState(false);
 
-  useEffect(() => {
-    connectMetamask();
-    setNetworks(
-      networksList.filter(
-        (net) => convertToHexadecimal(net.chainId) !== chainId
-      )
-    );
-  }, [chainId]);
-
-  const connectMetamask = async () => {
+  const connectMetamask = useCallback(async () => {
     try {
       const accounts = await sdk?.connect();
       setAccount(accounts?.[0]);
     } catch (err) {
       console.log(`failed to connect..`, err);
     }
-  };
+  }, [sdk, setAccount]);
+
+  useEffect(() => {
+    connectMetamask();
+    if (chainId) {
+      const currentNet = networksList.find(
+        (net) => convertToHexadecimal(net.chainId) === chainId
+      );
+      const arr = [
+        currentNet,
+        ...networksList.filter(
+          (net) => convertToHexadecimal(net.chainId) !== chainId
+        ),
+      ];
+      setNetworks(arr);
+    }
+  }, [chainId, connectMetamask]);
 
   const changeNetwork = async (chainId) => {
     try {
@@ -37,10 +43,6 @@ export const Metamask = ({ account, setAccount }) => {
     }
   };
 
-  const toggleActive = () => {
-    setIsActive(!isActive);
-  };
-
   return (
     <div className={style.container}>
       <button
@@ -51,31 +53,29 @@ export const Metamask = ({ account, setAccount }) => {
         {account ? account : "connect Metamask"}
       </button>
       {account && (
-        <div className={style.networkContainer}>
-          <p className={style.label} onClick={toggleActive}>
-            Change Network
-          </p>
-          {networks?.map((net) => (
-            <div
-              className={
-                isActive ? `${style.networkList}.active` : style.networkList
-              }
-              key={net.chainId}
-              onClick={() => changeNetwork(net.chainId)}
+        <>
+          <div className={style.selectContainer}>
+            <p className={style.text}>Choose Network</p>
+            <select
+              className={style.selectNetwork}
+              aria-label="selectNetwork"
+              name="networks"
+              onChange={(e) => changeNetwork(Number(e.target.value))}
+              defaultValue=""
             >
-              <div className={style.network}>
-                <img
-                  className={style.networkIcon}
-                  height={24}
-                  width={24}
-                  src={net.logoURI}
-                  alt={net.name}
-                />
-                <p className={style.text}>{net.name}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+              {networks?.map((net) => (
+                <option
+                  // disabled={convertToHexadecimal(net.chainId) === chainId}
+                  className={style.text}
+                  key={net.chainId}
+                  value={net.chainId}
+                >
+                  {net.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
       )}
     </div>
   );

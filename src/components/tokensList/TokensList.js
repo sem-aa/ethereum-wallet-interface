@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  addBalanceToArrTokens,
-  findCurrentListTokens,
-} from "../../utils/ethersFn";
-import { TokenItem } from "../tokenItem/TokenItem";
-import { createContractAndReturnBalance } from "../../utils/ethersFn";
+import { addBalanceToArrTokens, findCurrentListTokens } from "utils/ethersFn";
+import { TokenItem } from "components/tokenItem/TokenItem";
+import { createContractAndReturnBalance } from "utils/ethersFn";
 import style from "./TokenList.module.css";
 
 export const TokenList = ({ account }) => {
@@ -57,6 +54,7 @@ export const TokenList = ({ account }) => {
 
   return (
     <>
+      {/* FILTER */}
       <label className={style.labelSearch}>
         <input
           className={style.inputSearch}
@@ -66,32 +64,39 @@ export const TokenList = ({ account }) => {
           onChange={(e) => handleSearch(e.target.value)}
         />
       </label>
+
+      {/* TOKENS FAV */}
       {filteredTokens.length ? (
-        filteredTokens.map((tokenObj) => (
-          <TokenItem key={tokenObj.symbol} tokenObj={tokenObj} />
-        ))
+        <ul>
+          {filteredTokens.map((tokenObj) => (
+            <TokenItem key={tokenObj.symbol} tokenObj={tokenObj} />
+          ))}
+        </ul>
       ) : (
+        // Search in alltokens
         <>
           <p className={style.text}>
             Token not found, continue searching in the database?
           </p>
+
+          {/* Buuton */}
           <button
             className={style.btnSearch}
             onClick={() => searchTokenBd(searchText)}
           >
             Search in All Tokens
           </button>
-          <ul>
-            {filteredAllTokens.length
-              ? filteredAllTokens.map((tokenObj) => (
-                  <TokenItem
-                    key={tokenObj.symbol}
-                    tokenObj={tokenObj}
-                    addToken={findBalanceToken}
-                  />
-                ))
-              : null}
-          </ul>
+          {!!filteredAllTokens.length && (
+            <ul>
+              {filteredAllTokens.map((tokenObj) => (
+                <TokenItem
+                  key={tokenObj.symbol}
+                  tokenObj={tokenObj}
+                  addToken={findBalanceToken}
+                />
+              ))}
+            </ul>
+          )}
         </>
       )}
     </>

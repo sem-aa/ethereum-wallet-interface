@@ -20,46 +20,15 @@
   background-color: #2589c3;
 }
 
-.networkContainer {
-  position: relative;
-  display: inline-block;
-  background-color: white;
-  border-radius: 5px;
+.selectNetwork {
   padding: 4px;
-  max-width: 200px;
+  outline: none;
+  border-radius: 5px;
+  margin-left: 24px;
 }
 
-.label {
-  cursor: pointer;
-}
-
-.networkList {
-  position: absolute;
-  top: -100%;
-  left: 0;
-  z-index: 1;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  display: none;
-}
-
-.networkList.active {
-  top: 100%;
-}
-
-.network {
+.selectContainer {
   display: flex;
   align-items: center;
-  padding: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  border-radius: 5px;
 }
 
-.network:hover {
-  background-color: #f0f0f0;
-}
-
-.networkIcon {
-  margin-right: 5px;
-}

@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
-import { erc20ABI } from "@metamask/sdk-react-ui";
-import etherList from "../listTokens/ether.json";
-import polygonList from "../listTokens/polygon.json";
-import arbitumList from "../listTokens/arbitum.json";
+import erc20ABI from "blockchaine/erc20ABI.json";
+import etherList from "blockchaine/listTokens/ether.json";
+import polygonList from "blockchaine/listTokens/polygon.json";
+import arbitumList from "blockchaine/listTokens/arbitum.json";
 
 const arrSymbolTokens = ["ETH", "USDT", "USDC", "CRV"];
 export const networksList = [
@@ -29,6 +29,7 @@ export const networksList = [
       "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
   },
 ];
+
 
 const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
 
