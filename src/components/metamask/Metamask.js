@@ -17,6 +17,10 @@ export const Metamask = ({ account, setAccount }) => {
   }, [sdk, setAccount]);
 
   useEffect(() => {
+  
+  console.log("eth", window.ethereum);
+
+
     connectMetamask();
     if (chainId) {
       const currentNet = networksList.find(

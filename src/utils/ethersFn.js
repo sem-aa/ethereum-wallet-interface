@@ -30,20 +30,22 @@ export const networksList = [
   },
 ];
 
-
-const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-
+let provider;
 let chainId;
 
-provider.on("network", (newNetwork, oldNetwork) => {
-  if (oldNetwork) {
-    window.location.reload();
-  }
+if (typeof window.ethereum !== "undefined") {
+  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  provider.send("eth_requestAccounts", []);
+  provider.on("network", (newNetwork, oldNetwork) => {
+    if (oldNetwork) {
+      window.location.reload();
+    }
 
-  chainId = newNetwork.chainId;
-});
-
-provider.send("eth_requestAccounts", []);
+    chainId = newNetwork.chainId;
+  });
+} else {
+  window.alert("Install Metamask");
+}
 
 const findCurrentNetBalance = async () => {
   try {
