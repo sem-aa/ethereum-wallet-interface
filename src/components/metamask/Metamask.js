@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSDK } from "@metamask/sdk-react";
 import { convertToHexadecimal, networksList } from "utils/ethersFn";
 import style from "./Metamask.module.css";
+import { Button } from "components/button/Button";
 
 export const Metamask = ({ account, setAccount }) => {
   const [networks, setNetworks] = useState([]);
@@ -17,10 +18,6 @@ export const Metamask = ({ account, setAccount }) => {
   }, [sdk, setAccount]);
 
   useEffect(() => {
-  
-  console.log("eth", window.ethereum);
-
-
     connectMetamask();
     if (chainId) {
       const currentNet = networksList.find(
@@ -33,6 +30,8 @@ export const Metamask = ({ account, setAccount }) => {
         ),
       ];
       setNetworks(arr);
+    } else {
+      setNetworks(networksList);
     }
   }, [chainId, connectMetamask]);
 
@@ -49,13 +48,10 @@ export const Metamask = ({ account, setAccount }) => {
 
   return (
     <div className={style.container}>
-      <button
-        className={style.metamaskBtn}
-        type="button"
+      <Button
+        name={account ? account : "connect Metamask"}
         onClick={connectMetamask}
-      >
-        {account ? account : "connect Metamask"}
-      </button>
+      />
       {account && (
         <>
           <div className={style.selectContainer}>

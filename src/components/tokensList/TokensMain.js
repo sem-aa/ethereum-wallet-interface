@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { addBalanceToArrTokens, findCurrentListTokens } from "utils/ethersFn";
-import { TokenItem } from "components/tokenItem/TokenItem";
 import { createContractAndReturnBalance } from "utils/ethersFn";
-import style from "./TokenList.module.css";
+import { Button } from "components/button/Button";
 
-export const TokenList = ({ account }) => {
+import style from "./TokenList.module.css";
+import { Search } from "./SearchTokens";
+import { TokensList } from "./TokenList";
+
+export const TokensMain = ({ account }) => {
   const [listTokens, setListTokens] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filteredTokens, setFilteredTokens] = useState([]);
@@ -54,48 +57,23 @@ export const TokenList = ({ account }) => {
 
   return (
     <>
-      {/* FILTER */}
-      <label className={style.labelSearch}>
-        <input
-          className={style.inputSearch}
-          type="text"
-          placeholder="Search by symbol or name"
-          value={searchText}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-      </label>
-
-      {/* TOKENS FAV */}
+      <Search handleSearch={handleSearch} searchText={searchText} />
       {filteredTokens.length ? (
-        <ul>
-          {filteredTokens.map((tokenObj) => (
-            <TokenItem key={tokenObj.symbol} tokenObj={tokenObj} />
-          ))}
-        </ul>
+        <TokensList tokens={filteredTokens} />
       ) : (
-        // Search in alltokens
         <>
           <p className={style.text}>
             Token not found, continue searching in the database?
           </p>
-
-          {/* Buuton */}
-          <button
-            className={style.btnSearch}
+          <Button
+            name={"Search in All Tokens"}
             onClick={() => searchTokenBd(searchText)}
-          >
-            Search in All Tokens
-          </button>
+          />
           {!!filteredAllTokens.length && (
-            <ul>
-              {filteredAllTokens.map((tokenObj) => (
-                <TokenItem
-                  key={tokenObj.symbol}
-                  tokenObj={tokenObj}
-                  addToken={findBalanceToken}
-                />
-              ))}
-            </ul>
+            <TokensList
+              tokens={filteredAllTokens}
+              addToken={findBalanceToken}
+            />
           )}
         </>
       )}

@@ -69,15 +69,17 @@ export const createContractAndReturnBalance = async (address, account) => {
 };
 
 export const findCurrentListTokens = () => {
-  switch (chainId) {
-    case etherList[0].chainId:
-      return etherList;
-    case polygonList[0].chainId:
-      return polygonList;
-    case arbitumList[0].chainId:
-      return arbitumList;
-    default:
-      throw new Error(`Список токенов для chainId ${chainId} не найден.`);
+  if (chainId) {
+    switch (chainId) {
+      case etherList[0].chainId:
+        return etherList;
+      case polygonList[0].chainId:
+        return polygonList;
+      case arbitumList[0].chainId:
+        return arbitumList;
+      default:
+        throw new Error(`Список токенов для chainId ${chainId} не найден.`);
+    }
   }
 };
 

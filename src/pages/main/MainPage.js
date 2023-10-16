@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container } from "components/container/Container";
-import { TokenList } from "components/tokensList/TokensList";
+import { TokensMain } from "components/tokensList/TokensMain";
 import { Metamask } from "components/metamask/Metamask";
 
 export const MainPage = () => {
@@ -9,7 +9,7 @@ export const MainPage = () => {
   return (
     <Container>
       <Metamask account={account} setAccount={setAccount} />
-      {account && <TokenList account={account} />}
+      {account && <TokensMain account={account} />}
     </Container>
   );
 };
