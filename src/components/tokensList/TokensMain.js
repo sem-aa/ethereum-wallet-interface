@@ -13,6 +13,7 @@ export const TokensMain = ({ account }) => {
   const [filteredTokens, setFilteredTokens] = useState([]);
   const [filteredAllTokens, setFilteredAllTokens] = useState([]);
 
+  // displays available tokens
   useEffect(() => {
     if (account) {
       addBalanceToArrTokens(account).then((data) => {
@@ -22,6 +23,7 @@ export const TokensMain = ({ account }) => {
     }
   }, [account]);
 
+  // search in displayed tokens
   const handleSearch = (query) => {
     setSearchText(query);
     const filtered = listTokens.filter(
@@ -32,6 +34,7 @@ export const TokensMain = ({ account }) => {
     setFilteredTokens(filtered);
   };
 
+  // search in all network tokens
   const searchTokenBd = (query) => {
     const allTokens = findCurrentListTokens();
     const filtered = allTokens.filter(
@@ -47,6 +50,7 @@ export const TokensMain = ({ account }) => {
     setFilteredAllTokens(filtered);
   };
 
+  // looks for balance and adds the token to the displayed tokens
   const findBalanceToken = async (obj) => {
     obj.balance = await createContractAndReturnBalance(obj.address, account);
     setSearchText("");

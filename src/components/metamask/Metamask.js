@@ -8,6 +8,7 @@ export const Metamask = ({ account, setAccount }) => {
   const [networks, setNetworks] = useState([]);
   const { sdk, provider, chainId } = useSDK();
 
+  // Metamask connection function
   const connectMetamask = useCallback(async () => {
     try {
       const accounts = await sdk?.connect();
@@ -20,6 +21,7 @@ export const Metamask = ({ account, setAccount }) => {
   useEffect(() => {
     connectMetamask();
     if (chainId) {
+      // determines the current network and creates an array of possible networks
       const currentNet = networksList.find(
         (net) => convertToHexadecimal(net.chainId) === chainId
       );
@@ -35,6 +37,7 @@ export const Metamask = ({ account, setAccount }) => {
     }
   }, [chainId, connectMetamask]);
 
+  // network switching function
   const changeNetwork = async (chainId) => {
     try {
       await provider?.request({

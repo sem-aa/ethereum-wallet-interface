@@ -4,7 +4,9 @@ import etherList from "blockchaine/listTokens/ether.json";
 import polygonList from "blockchaine/listTokens/polygon.json";
 import arbitumList from "blockchaine/listTokens/arbitum.json";
 
+// display array of tokens
 const arrSymbolTokens = ["ETH", "USDT", "USDC", "CRV"];
+// networks change array
 export const networksList = [
   {
     symbol: "ETH",
@@ -33,6 +35,7 @@ export const networksList = [
 let provider;
 let chainId;
 
+// created by the provider and checks for the presence of metamask in the browser
 if (typeof window.ethereum !== "undefined") {
   provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   provider.send("eth_requestAccounts", []);
@@ -47,6 +50,7 @@ if (typeof window.ethereum !== "undefined") {
   window.alert("Install Metamask");
 }
 
+// finds the current network balance
 const findCurrentNetBalance = async () => {
   try {
     const signer = provider.getSigner();
@@ -58,6 +62,7 @@ const findCurrentNetBalance = async () => {
   }
 };
 
+// creates a contract and looks for the token balance
 export const createContractAndReturnBalance = async (address, account) => {
   try {
     const contract = new ethers.Contract(address, erc20ABI, provider);
@@ -68,6 +73,7 @@ export const createContractAndReturnBalance = async (address, account) => {
   }
 };
 
+// selects a list of all tokens for the current network
 export const findCurrentListTokens = () => {
   if (chainId) {
     switch (chainId) {
@@ -78,13 +84,14 @@ export const findCurrentListTokens = () => {
       case arbitumList[0].chainId:
         return arbitumList;
       default:
-        throw new Error(`Список токенов для chainId ${chainId} не найден.`);
+        throw new Error(`list tokens of chainId ${chainId} not found.`);
     }
   }
 };
 
 export const convertToHexadecimal = (number) => "0x" + number.toString(16);
 
+// adds the balance to the display token array
 export const addBalanceToArrTokens = async (account) => {
   const arrTokensBalance = [];
   const currentListTokens = findCurrentListTokens();
